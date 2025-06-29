@@ -1,3 +1,4 @@
+@import "tailwindcss";
 @import "./normalize.css";
 @import "./webflow.css";
 @import "./alloy-tests.webflow.css";
@@ -18,4 +19,20 @@ input:valid + label,
 input:-internal-autofill-selected + label,
 input {
     color: #000000;
+}
+
+/* Modal CSS puro */
+#modalToggle:checked ~ .content-tasks + .modal-task {
+    display: flex !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+}
+
+#modalToggle:checked ~ .content-tasks + .modal-task .container-modal {
+    transform: scale(1) !important;
+}
+
+/* Campos do form com arredondamento igual ao botão */
+.w-input {
+    border-radius: 0.5rem !important; /* rounded-lg */
 }

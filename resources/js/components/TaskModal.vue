@@ -1,72 +1,54 @@
 <script setup>
-import { ref, watch, defineEmits, defineProps } from 'vue';
+import TaskForm from './TaskForm.vue';
+import { ref, watch } from 'vue';
 
-const emits = defineEmits(['close', 'save']);
 const props = defineProps({
   visible: Boolean,
   task: Object,
+  loading: Boolean,
+  error: String,
 });
+const emit = defineEmits(['close', 'save']);
 
-const form = ref({
-  nome: '',
-  descricao: '',
-  finalizado: false,
-  data_limite: null,
-});
+const localTask = ref(null);
 
-watch(() => props.task, (newTask) => {
-  if (newTask) {
-    form.value = { ...newTask };
-  } else {
-    form.value = { nome: '', descricao: '', finalizado: false, data_limite: null };
-  }
-});
+watch(
+  () => props.task,
+  (newTask) => {
+    localTask.value = newTask ? { ...newTask } : null;
+  },
+  { immediate: true }
+);
 
-function onSave() {
-  emits('save', form.value);
-}
-function onClose() {
-  emits('close');
+function handleSave(taskData) {
+  emit('save', taskData);
 }
 </script>
 
 <template>
-  <div v-show="visible" class="modal-overlay">
-    <div class="modal-content">
-      <h3>{{ form.nome ? 'Editar Tarefa' : 'Nova Tarefa' }}</h3>
-      <form @submit.prevent="onSave">
-        <label>Nome</label>
-        <input v-model="form.nome" required />
-        
-        <label>Descrição</label>
-        <textarea v-model="form.descricao"></textarea>
-
-        <label>Finalizado</label>
-        <input type="checkbox" v-model="form.finalizado" />
-
-        <label>Data limite</label>
-        <input type="date" v-model="form.data_limite" />
-
-        <button type="submit">Salvar</button>
-        <button type="button" @click="onClose">Cancelar</button>
-      </form>
+  <div
+    v-if="visible"
+    class="fixed inset-0 z-50 bg-black/40 flex items-center justify-center px-4"
+    aria-modal="true"
+    role="dialog"
+  >
+    <div class="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-lg relative animate-fadeIn">
+      <button
+        @click="$emit('close')"
+        class="absolute top-4 right-4 w-12 h-12 text-gray-400 hover:text-gray-700 transition flex items-center justify-center"
+        aria-label="Fechar"
+      >
+        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+      <h2 class="text-2xl font-bold mb-8 text-gray-900 pb-4 border-b border-gray-100">{{ localTask ? 'Editar Tarefa' : 'Nova Tarefa' }}</h2>
+      <div v-if="error" class="text-red-500 mb-2">{{ error }}</div>
+      <TaskForm
+        :modelValue="localTask"
+        :loading="loading"
+        @submit="handleSave"
+      />
     </div>
   </div>
 </template>
-
-<style scoped>
-.modal-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.5);
-  display: flex; justify-content: center; align-items: center;
-  z-index: 1000;
-}
-.modal-content {
-  background: white; 
-  padding: 1rem; 
-  border-radius: 8px; 
-  width: 400px;
-  max-width: 90vw;
-}
-</style>

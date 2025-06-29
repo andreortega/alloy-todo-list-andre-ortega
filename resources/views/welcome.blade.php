@@ -16,8 +16,8 @@
         <script type="text/javascript">
             !function(o,c){var n=c.documentElement,t=" w-mod-";n.className+=t+"js",("ontouchstart"in o||o.DocumentTouch&&c instanceof DocumentTouch)&&(n.className+=t+"touch")}(window,document);
         </script>
-        <link href="images/favicon.ico" rel="shortcut icon" type="image/x-icon">
-        <link href="images/webclip.png" rel="apple-touch-icon">
+        <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon">
+        <link href="/webflow/images/webclip.png" rel="apple-touch-icon">
 
         <!-- Styles / Scripts -->
         @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
@@ -25,7 +25,10 @@
         @endif
     </head>
 
-    <body class="body">
-        <div id="app"></div>
+    <body class="body bg-gray-50">
+        
+        <div id="app">
+            <!-- Vue.js renderiza aqui -->
+        </div>
     </body>
 </html>
